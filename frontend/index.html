@@ -636,7 +636,9 @@
 
   
 <script>
-    const API = 'http://localhost:5000';
+    const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : window.location.origin;
     const CONDITIONS = ['acne', 'blackheads', 'dark spots', 'dryness', 'normal', 'oily', 'pores', 'wrinkles'];
     const COND_ICONS = { 'acne': '🔴', 'blackheads': '⬛', 'dark spots': '🟤', 'dryness': '💧', 'normal': '✅', 'oily': '💦', 'pores': '🔵', 'wrinkles': '〰️' };
     let selectedFile = null, capturedBlob = null, radarChart = null, beforeFile = null, afterFile = null;

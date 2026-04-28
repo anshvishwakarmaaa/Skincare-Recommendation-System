@@ -16,6 +16,7 @@ from PIL import Image
 from dotenv import load_dotenv
 
 load_dotenv()
+PORT = int(os.environ.get('PORT', 5000))
 
 # Settings from config
 from config import CONDITIONS, MODEL_PATH, THRESHOLDS_PATH, UPLOADS_DIR, LOGS_DIR, API_BASE_URL, MAX_FILE_SIZE, ALLOWED_EXTENSIONS
@@ -46,7 +47,7 @@ except ImportError as e:
     raise
 
 app = Flask(__name__, static_folder='frontend')
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app, origins="*")
 
 app.config['UPLOAD_FOLDER'] = UPLOADS_DIR
 app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
@@ -261,6 +262,38 @@ Rules:
         
         return report
 
+def download_model_if_needed():
+    model_path = 'models/fixed_skin_model.pth'
+    thresholds_path = 'models/optimal_thresholds.json'
+    os.makedirs('models', exist_ok=True)
+    
+    if not os.path.exists(model_path):
+        print("📥 Downloading model from Hugging Face...")
+        try:
+            from huggingface_hub import hf_hub_download
+            hf_hub_download(
+                repo_id=os.environ.get('HF_REPO_ID', 'your-username/alskincare-model'),
+                filename='fixed_skin_model.pth',
+                local_dir='models'
+            )
+            print("✅ Model downloaded successfully!")
+        except Exception as e:
+            print(f"⚠️ Could not download model: {e}")
+    
+    if not os.path.exists(thresholds_path):
+        try:
+            from huggingface_hub import hf_hub_download
+            hf_hub_download(
+                repo_id=os.environ.get('HF_REPO_ID', 'your-username/alskincare-model'),
+                filename='optimal_thresholds.json',
+                local_dir='models'
+            )
+            print("✅ Thresholds downloaded successfully!")
+        except Exception as e:
+            print(f"⚠️ Could not download thresholds: {e}")
+
+download_model_if_needed()
+
 try:
     analyzer = SkinAnalyzerAPI()
 except Exception as e:
@@ -469,11 +502,12 @@ Rules:
 
 if __name__ == '__main__':
     logger.info("=" * 60)
-    logger.info("\U0001f680 STARTING ALSKINCARE BACKEND SERVER")
+    logger.info("🚀 STARTING ALSKINCARE BACKEND SERVER")
+    logger.info(f"🌐 Port: {PORT}")
     logger.info("=" * 60)
     
     if analyzer is None:
-        logger.error("\u274c CRITICAL: Analyzer failed to initialize. Check model file and dependencies.")
+        logger.error("❌ CRITICAL: Analyzer failed to initialize. Check model file and dependencies.")
         exit(1)
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=False, host='0.0.0.0', port=PORT)
