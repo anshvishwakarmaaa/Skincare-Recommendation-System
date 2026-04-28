@@ -1,5 +1,10 @@
 import torch
 import torch.nn.functional as F
+import gc
+
+# Force CPU and minimize memory
+torch.set_num_threads(1)
+torch.backends.cudnn.enabled = False
 import cv2
 import numpy as np
 import os
@@ -109,8 +114,10 @@ class SkinAnalyzerAPI:
             with torch.no_grad():
                 processed_image = self.preprocess_image(image_pil)
                 outputs = self.model(processed_image)
-                # Exact snippet requested:
-                probabilities = F.sigmoid(outputs).cpu().numpy()[0]
+                probabilities = torch.sigmoid(outputs).cpu().numpy()[0]
+                # Free memory immediately
+                del processed_image, outputs
+                gc.collect()
             
             results = {}
             for condition, prob in zip(self.conditions, probabilities):

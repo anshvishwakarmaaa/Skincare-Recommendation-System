@@ -51,6 +51,12 @@ class FixedSkinModel(nn.Module):
         trainable_params = sum(p.numel() for p in self.parameters() if p.requires_grad)
         print(f"FixedSkinModel Initialized! Total params: {total_params:,} | Trainable params: {trainable_params:,}")
 
+        # Set to eval mode and minimize memory
+        self.model.eval()
+        for param in self.model.parameters():
+            param.requires_grad = False
+        torch.set_grad_enabled(False)
+
     def freeze_backbone(self):
         """Freeze all backbone layers, only classifier will train"""
         for param in self.model.features.parameters():
