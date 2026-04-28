@@ -951,6 +951,13 @@
       z.addEventListener('dragleave', e => { e.preventDefault(); z.classList.remove('dragover') });
       z.addEventListener('drop', e => { e.preventDefault(); z.classList.remove('dragover'); if (e.dataTransfer.files[0]) { if (which === 'before') { beforeFile = e.dataTransfer.files[0]; showComparePreview('before', beforeFile) } else { afterFile = e.dataTransfer.files[0]; showComparePreview('after', afterFile) } checkCompareReady() } });
     });
+
+    // Keep Render backend alive - ping every 14 minutes
+    setInterval(() => {
+        fetch(`${API}/api/health`)
+            .then(r => console.log('Backend alive:', r.status))
+            .catch(() => console.log('Backend waking up...'));
+    }, 14 * 60 * 1000);
   </script>
 </body>
 </html>
