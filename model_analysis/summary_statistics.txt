@@ -1,0 +1,58 @@
+SKIN ANALYSIS SUMMARY REPORT
+==================================================
+
+Total Images Analyzed: 12023
+Overall Accuracy: 0.3507
+
+Per-Condition Performance:
+------------------------------
+Acne:
+  Precision: 0.4918
+  Recall:    0.3500
+  F1-Score:  0.4090
+
+Blackheads:
+  Precision: 0.6491
+  Recall:    0.4929
+  F1-Score:  0.5603
+
+Dark Spots:
+  Precision: 0.3021
+  Recall:    0.1242
+  F1-Score:  0.1760
+
+Dryness:
+  Precision: 0.2116
+  Recall:    0.3392
+  F1-Score:  0.2606
+
+Normal:
+  Precision: 0.4348
+  Recall:    0.2726
+  F1-Score:  0.3351
+
+Oily:
+  Precision: 0.3315
+  Recall:    0.2913
+  F1-Score:  0.3101
+
+Pores:
+  Precision: 0.6801
+  Recall:    0.8824
+  F1-Score:  0.7682
+
+Wrinkles:
+  Precision: 0.7596
+  Recall:    0.3809
+  F1-Score:  0.5074
+
+Most Common Conditions:
+------------------------------
+Blackheads: 1496 occurrences
+Acne: 1466 occurrences
+Pores: 1291 occurrences
+Dryness: 1101 occurrences
+Wrinkles: 994 occurrences
+Oily: 914 occurrences
+Dark Spots: 874 occurrences
+Normal: 729 occurrences
